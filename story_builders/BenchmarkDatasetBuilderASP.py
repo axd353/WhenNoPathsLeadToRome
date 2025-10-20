@@ -372,14 +372,4 @@ if __name__ == "__main__":
     # print("Generated Dataset:")
     # print(dataset_df.shape)
 
-    ## =================================  Example NoRA with ambg ======================================
-    seed = 1990
-    output_file = "../output_stories/test_stories_bench_ASP_Nora_Wmbg.csv"
-    builder = BenchmarkDatasetBuilderASP('configs/config_NoRA.json', seed=seed, output_file=output_file)
-    total_num_stories = 100   # Total stories to generate
-    ent_nums = np.random.choice([20,23,24,25], size=total_num_stories)#number of nodes in the stories will be sampled from this 
-    max_facts_list = np.random.randint(33, 46, size=total_num_stories)##number of edges in the story will be sampled from this 
-    num_tries = 2000
-    dataset_df = builder.build_dataset(total_num_stories, ent_nums, max_facts_list,too_many_consecutive_contradictions=num_tries)
-    print("Generated Dataset:")
-    print(dataset_df.shape)
+    

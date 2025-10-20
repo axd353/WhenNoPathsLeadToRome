@@ -23,16 +23,15 @@ class WorldBioToy(WorldSpecifics):
         self.logger = logger
         self.universal_rules = universal_rules
         self.plausible_relations = self.extract_plausible_relations(universal_rules)
-        ## logging stuff 
         self.print_counter = 0
-        self.print_max_times = 1
-        self.print_diff_calc_counter = 0
-        self.print_diff_calc_counter_ceil = 0
+        self.print_max_times = 0
         self.last_save_time = time.time()
         # 2. Exclude only the self loop edges in the story, genrerated seperately 
         self.exclude_preds_during_gen = [
-            "is_gene", "is_compound", "is_disease", 'is_absorbed',
-            "has_side_effect", "no_side_effect", 
+            "is_gene", "is_compound", "is_disease",
+            "has_side_effect", "no_side_effect",
+
+
         ]
         # 3. Probabilities for entity types and side-effect flags
         self.gene_percent = gene_percent
@@ -71,10 +70,6 @@ class WorldBioToy(WorldSpecifics):
             low, high = config["no_side_effect_prob_range"]
             self.no_side_effect_prob = random.uniform(low, high)
             exp["no_side_effect_prob"] = self.no_side_effect_prob
-        if "absorbe_prob_range" in config:
-            low, high = config["absorbe_prob_range"]
-            self.absorbe_prob = random.uniform(low, high)
-            exp["absorbe_prob_range"] = self.absorbe_prob
 
         # Minimal entailed atoms
         self.min_entailed_atoms_per_story = config.get("min_entailed_atoms_per_story", 1)
@@ -116,12 +111,10 @@ class WorldBioToy(WorldSpecifics):
                 if random.random() < self.has_side_effect_prob:
                     added_facts.append(f"has_side_effect({i},{i}).")
                     fact_details.append(((i, i), "has_side_effect"))
-                elif random.random() < (self.no_side_effect_prob + self.has_side_effect_prob):
+                elif random.random() < self.no_side_effect_prob:
                     added_facts.append(f"no_side_effect({i},{i}).")
                     fact_details.append(((i, i), "no_side_effect"))
-                if random.random() < self.absorbe_prob:
-                    added_facts.append(f"is_absorbed({i},{i}).")
-                    fact_details.append(((i, i), "is_absorbed"))
+
             else:
                 added_facts.append(f"is_disease({i},{i}).")
                 fact_details.append(((i, i), "is_disease"))
@@ -156,9 +149,6 @@ class WorldBioToy(WorldSpecifics):
             Y_pool = self.diseases
         elif pred == "palliates":
             X_pool = self.compounds + self.genes
-            Y_pool = self.diseases
-        elif pred == "no_palliate":
-            X_pool = self.genes
             Y_pool = self.diseases
         elif pred.startswith("ss"):
             # structural similarity only between compounds
@@ -337,8 +327,7 @@ class WorldBioToy(WorldSpecifics):
         engine = PositiveProgramTP(complete_program, logger=self.logger)#TODO: YOU COULD AVOID RECOMPUTING THSI FOR EACH QUERY
         engine.parse_program()
         final_model, step_count = engine.compute_least_model()
-        if self.print_diff_calc_counter < self.print_diff_calc_counter_ceil:
-            self.logger.debug(f'with {complete_program} \n \n engine produces {final_model} after being asked to produce  compute_least_model. print_diff_calc_counter is {self.print_diff_calc_counter}')
+
         rules_set_total = set()
         facts_set_total = set()
         derivations = {}  # dictionary mapping normalized derived_atom -> {"rules": [...], "facts": [...]}
@@ -369,8 +358,6 @@ class WorldBioToy(WorldSpecifics):
                     f"Program: {complete_program}, Query: {query_norm}"
                 )
             deriv_df = engine._build_derivations_df(final_model)
-            if self.print_diff_calc_counter < self.print_diff_calc_counter_ceil:
-                self.logger.debug(f'with {complete_program} \n \n engine produces {deriv_df} after being asked to produce  derivations. print_diff_calc_counter is {self.print_diff_calc_counter}')
             deriv_df['derived_atom_str'] = deriv_df['derived_atom'].apply(lambda x: x.replace(' ', ''))
             query_deriv = deriv_df[ deriv_df['derived_atom_str'] == query_norm ]
             if query_deriv.empty:
@@ -485,14 +472,10 @@ class WorldBioToy(WorldSpecifics):
 
             for query in group['query_str'].unique():
                 branch_info = {}
-                ### TODO this can probably run once for every story and then be recycled for each query 
                 for b_idx, complete_prog in complete_variants.items():
                     outcome, r_set, f_set, derivs = self.process_variant(complete_prog, query, variant_solver_results[b_idx])
                     branch_info[b_idx] = {"outcome": outcome, "rules": r_set, "facts": f_set, "derivations": derivs}
                 # Aggregate results across branches for this query.
-                if self.print_diff_calc_counter < self.print_diff_calc_counter_ceil:
-                    self.logger.debug(f' After process_variant  \n \n we arrive at produces {branch_info}  this is number {self.print_diff_calc_counter}')
-                    self.print_diff_calc_counter += 1
                 agg_rules = set()
                 agg_facts = set()
                 agg_derivations = {}

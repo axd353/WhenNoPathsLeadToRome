@@ -20,7 +20,7 @@
     #max_ambiguity_range , number of alternatives in each ambiguous fact will lie in this range
     "max_ambiguity_range": [2,3],
     #set this toi zero to get stories with no ambiguity, other-wise 3 X this quantity is an upper bound on the number of refinements a story can produce 
-    "max_num_refinements" : 20,
+    "max_num_refinements" : 0,
     #with what probability does the no_sons tag get attached
     "prob__range_property_no_bros": [0.04, 0.10],
     "prob__range_property_no_sis": [0.04, 0.10],

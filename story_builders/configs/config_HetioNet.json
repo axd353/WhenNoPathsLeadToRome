@@ -1,0 +1,11 @@
+{
+    "world_rules_dir": "../world_rules/HetioNet",
+    "world_obj_class": "WorldBioToy",
+    "calculate_difficulty": "True",
+    "experiment_with_params": true, 
+    "gene_percent_range": [0.2, 0.45], 
+    "compound_percent_range": [0.2, 0.45], 
+    "disease_percent_range": [0.2, 0.45],
+    "has_side_effect_prob_range": [0.05, 0.25],
+    "no_side_effect_prob_range": [0.05, 0.25]
+}
