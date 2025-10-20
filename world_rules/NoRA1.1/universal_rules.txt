@@ -1,0 +1,55 @@
+##in clingo lingo
+nibling_of(Y, X) :- sibling_of(Z, X) , child_of(Y, Z).
+nibling_of(Y, X) :- sibling_in_law_of(Z, X) , child_of(Y, Z).
+parent_of(Y, X) :- sibling_of(Z, X) , parent_of(Y, Z).
+aunt_or_uncle_of(Y, X) :- parent_of(Z, X) , sibling_of(Y, Z).
+sibling_of(Y, X) :- parent_of(Z, X) , child_of(Y, Z), Y != X.
+granddaughter_of(Y, X) :- child_of(Z, X) , daughter_of(Y, Z).
+grandson_of(Y, X) :- child_of(Z, X) , son_of(Y, Z).
+grandchild_of(Y, X) :- child_of(Z, X) , child_of(Y, Z).
+child_in_law_of(Y, X) :- child_of(Z, X) , spouse_of(Y, Z).
+parent_in_law_of(Y, X) :- spouse_of(Z, X) , parent_of(Y, Z).
+parent_of(Y, X) :- spouse_of(Z, X) , parent_in_law_of(Y, Z).
+parent_of(X, Y) :- spouse_of(X, Z) , parent_of(Z, Y).
+grandparent_of(X, Y) :- spouse_of(X, Z) , grandparent_of(Z, Y).
+maternal_grandparent_of(X, Y) :- spouse_of(X, Z) ,  maternal_grandparent_of(Z, Y).
+paternal_grandparent_of(X, Y) :- spouse_of(X, Z) , paternal_grandparent_of(Z, Y).
+grandparent_of(Y, X) :- parent_of(Z, X) , parent_of(Y, Z).
+sibling_in_law_of(Y, X) :- sibling_of(Z, X) , spouse_of(Y, Z).
+grandparent_of(Y, X) :- sibling_of(Z, X) , grandparent_of(Y, Z).
+paternal_grandparent_of(Y, X) :- sibling_of(Z, X) , paternal_grandparent_of(Y, Z).
+maternal_grandparent_of(Y, X) :- sibling_of(Z, X) , maternal_grandparent_of(Y, Z).
+aunt_or_uncle_of(Y, X) :- sibling_of(Z, X) , aunt_or_uncle_of(Y, Z).
+paternal_aunt_or_uncle_of(Y, X) :- sibling_of(Z, X) , paternal_aunt_or_uncle_of(Y, Z).
+maternal_aunt_or_uncle_of(Y, X) :- sibling_of(Z, X) , maternal_aunt_or_uncle_of(Y, Z).
+sibling_of(Y, X) :- sibling_of(Z, X) , sibling_of(Y, Z), Y != X.
+maternal_grandmother_of(V,X):- paternal_grandmother_of(U,X), grandmother_of(V,X), U != V.
+paternal_grandmother_of(V,X):- maternal_grandmother_of(U,X), grandmother_of(V,X), U != V.
+maternal_grandfather_of(V,X):- paternal_grandfather_of(U,X), grandfather_of(V,X), U != V.
+paternal_grandfather_of(V,X):- maternal_grandfather_of(U,X), grandfather_of(V,X), U != V.
+##
+## Gender implication rules (X must be female)
+is_female(X,X) :- mother_of(X,Y).
+is_female(X,X) :- grandmother_of(X,Y).
+is_female(X,X) :- sister_of(X,Y).
+is_female(X,X) :- aunt_of(X,Y).
+is_female(X,X) :- wife_of(X,Y).
+is_female(X,X) :- daughter_of(X,Y).
+is_female(X,X) :- granddaughter_of(X,Y).
+is_female(X,X) :- niece_of(X,Y).
+is_female(X,X) :- daughter_in_law_of(X,Y).
+is_female(X,X) :- sister_in_law_of(X,Y).
+is_female(X,X) :- mother_in_law_of(X,Y).
+##
+## Gender implication rules (X must be male)
+is_male(X,X) :- father_of(X,Y).
+is_male(X,X) :- grandfather_of(X,Y).
+is_male(X,X) :- brother_of(X,Y).
+is_male(X,X) :- uncle_of(X,Y).
+is_male(X,X) :- husband_of(X,Y).
+is_male(X,X) :- son_of(X,Y).
+is_male(X,X) :- grandson_of(X,Y).
+is_male(X,X) :- nephew_of(X,Y).
+is_male(X,X) :- son_in_law_of(X,Y).
+is_male(X,X) :- brother_in_law_of(X,Y).
+is_male(X,X) :- father_in_law_of(X,Y).

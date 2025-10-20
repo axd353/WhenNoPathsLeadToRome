@@ -1,0 +1,44 @@
+##in clingo lingo
+### properties 
+## implications
+is_female(Y,Y) :- sibling_of(X,Y) , no_brothers(X,X).
+is_male(Y,Y) :- sibling_of(X,Y) , no_sisters(X,X).
+## sons and daughters
+is_female(Y,Y) :- parent_of(X,Y), no_sons(X,X).  
+is_male(Y,Y) :- parent_of(X,Y), no_daughters(X,X).  
+## paternal-maternal implications 
+maternal_aunt_of(X,Y) :- aunt_of(X,Y), paternal_grandparent_of(Z,Y), no_daughters(Z,Z).
+paternal_aunt_of(X,Y) :- aunt_of(X,Y), maternal_grandparent_of(Z,Y), no_daughters(Z,Z).
+maternal_uncle_of(X,Y) :- uncle_of(X,Y), paternal_grandparent_of(Z,Y), no_sons(Z,Z).
+paternal_uncle_of(X,Y) :- uncle_of(X,Y), maternal_grandparent_of(Z,Y), no_sons(Z,Z).
+maternal_aunt_or_uncle_of(X,Y) :- aunt_or_uncle_of(X,Y) , no_brothers(X,X).
+paternal_aunt_or_uncle_of(X,Y) :- aunt_or_uncle_of(X,Y) , no_sisters(X,X).
+paternal_grandparent_of(X,Y) :- grandparent_of(X,Y) , no_daughters(X,X).
+maternal_grandparent_of(X,Y) :- grandparent_of(X,Y) , no_sons(X,X).
+##has_property in the head
+no_daughters(X,X):- parent_of(X,Y), is_male(Y,Y), no_sisters(Y,Y). 
+no_sons(X,X):- parent_of(X,Y), is_female(Y,Y), no_brothers(Y,Y). 
+no_brothers(Y,Y) :- parent_of(X,Y), no_sons(X,X).
+no_sisters(Y,Y) :- parent_of(X,Y), no_daughters(X,X).  
+no_sons(X,X):- spouse_of(X,Y), no_sons(Y,Y).
+no_daughters(X,X):- spouse_of(X,Y), no_daughters(Y,Y).
+no_brothers(Y,Y) :- sibling_of(X,Y), no_brothers(X,X), is_female(X,X).
+no_sisters(Y,Y) :- sibling_of(X,Y), no_sisters(X,X), is_male(X,X).
+##constraints
+:- no_brothers(Y,Y), brother_of(X,Y).
+:- no_sisters(Y,Y), sister_of(X,Y).
+:- no_daughters(Y,Y), daughter_of(X,Y).
+:- no_sons(Y,Y), son_of(X,Y).
+## never generate these heads as fact.. only to generate this predictae, by CLark's completion is by this body
+no_siblings(Y,Y) :- no_brothers(Y,Y), no_sisters(Y,Y).
+no_children(Y,Y) :- no_daughters(Y,Y), no_sons(Y,Y).
+## very rare you will get these contradiction
+:- sibling_in_law_of(X,Y), no_siblings(Y,Y) , no_siblings(X,X).
+:- aunt_or_uncle_of(X,Y), no_siblings(X,X).
+:- parent_of(X,Y), no_children(X,X).
+:- grandparent_of(X,Y), no_children(X,X).
+:- parent_in_law_of(X,Y), no_children(X,X).
+##more non-path 
+nephew_of(Y,Z):- grandson_of(Y,X), parent_of(X,Z), no_sons(Z,Z).
+niece_of(Y,Z):- granddaughter_of(Y,X), parent_of(X,Z), no_daughters(Z,Z).
+

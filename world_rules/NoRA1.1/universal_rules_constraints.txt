@@ -1,0 +1,78 @@
+##in clingo lingo
+:- aunt_or_uncle_of(Y,X), child_in_law_of(Y,X).
+:- aunt_or_uncle_of(Y,X), child_of(Y,X).
+:- aunt_or_uncle_of(Y,X), grandchild_of(Y,X).
+:- aunt_or_uncle_of(Y,X), grandparent_of(Y,X).
+:- aunt_or_uncle_of(Y,X), nibling_of(Y,X).
+:- aunt_or_uncle_of(Y,X), parent_in_law_of(Y,X).
+:- aunt_or_uncle_of(Y,X), parent_of(Y,X).
+:- aunt_or_uncle_of(Y,X), sibling_in_law_of(Y,X).
+:- aunt_or_uncle_of(Y,X), sibling_of(Y,X).
+:- aunt_or_uncle_of(Y,X), spouse_of(Y,X).
+:- child_in_law_of(Y,X), child_of(Y,X).
+:- child_in_law_of(Y,X), grandchild_of(Y,X).
+:- child_in_law_of(Y,X), grandparent_of(Y,X).
+:- child_in_law_of(Y,X), nibling_of(Y,X).
+:- child_in_law_of(Y,X), parent_in_law_of(Y,X).
+:- child_in_law_of(Y,X), parent_of(Y,X).
+:- child_in_law_of(Y,X), sibling_in_law_of(Y,X).
+:- child_in_law_of(Y,X), sibling_of(Y,X).
+:- child_in_law_of(Y,X), spouse_of(Y,X).
+:- child_of(Y,X), grandchild_of(Y,X).
+:- child_of(Y,X), grandparent_of(Y,X).
+:- child_of(Y,X), nibling_of(Y,X).
+:- child_of(Y,X), parent_in_law_of(Y,X).
+:- child_of(Y,X), parent_of(Y,X).
+:- child_of(Y,X), sibling_in_law_of(Y,X).
+:- child_of(Y,X), sibling_of(Y,X).
+:- child_of(Y,X), spouse_of(Y,X).
+:- grandchild_of(Y,X), grandparent_of(Y,X).
+:- grandchild_of(Y,X), nibling_of(Y,X).
+:- grandchild_of(Y,X), parent_in_law_of(Y,X).
+:- grandchild_of(Y,X), parent_of(Y,X).
+:- grandchild_of(Y,X), sibling_in_law_of(Y,X).
+:- grandchild_of(Y,X), sibling_of(Y,X).
+:- grandchild_of(Y,X), spouse_of(Y,X).
+:- grandparent_of(Y,X), nibling_of(Y,X).
+:- grandparent_of(Y,X), parent_in_law_of(Y,X).
+:- grandparent_of(Y,X), parent_of(Y,X).
+:- grandparent_of(Y,X), sibling_in_law_of(Y,X).
+:- grandparent_of(Y,X), sibling_of(Y,X).
+:- grandparent_of(Y,X), spouse_of(Y,X).
+:- nibling_of(Y,X), parent_in_law_of(Y,X).
+:- nibling_of(Y,X), parent_of(Y,X).
+:- nibling_of(Y,X), sibling_in_law_of(Y,X).
+:- nibling_of(Y,X), sibling_of(Y,X).
+:- nibling_of(Y,X), spouse_of(Y,X).
+:- parent_in_law_of(Y,X), parent_of(Y,X).
+:- parent_in_law_of(Y,X), sibling_in_law_of(Y,X).
+:- parent_in_law_of(Y,X), sibling_of(Y,X).
+:- parent_in_law_of(Y,X), spouse_of(Y,X).
+:- parent_of(Y,X), sibling_in_law_of(Y,X).
+:- parent_of(Y,X), sibling_of(Y,X).
+:- parent_of(Y,X), spouse_of(Y,X).
+:- sibling_in_law_of(Y,X), sibling_of(Y,X).
+:- sibling_in_law_of(Y,X), spouse_of(Y,X).
+:- sibling_of(Y,X), spouse_of(Y,X).
+## todo Y!=X :- sibling_of(Y,X).  Y!=X :- spouse_of(Y,X)## not needed presently because we do not genrate self siblings, not ri sself sibling inferable from the rules
+## num parents constraints (Think about these constraints)
+:- parent_of(U,X), parent_of(V,X), parent_of(W,X), U != V, W != V, U != W.
+:- parent_of(U,X), parent_of(V,X), is_male(U,U), is_male(V,V), U != V. 
+:- parent_of(U,X), parent_of(V,X), is_female(U,U), is_female(V,V), U != V. 
+:- parent_in_law_of(U,X), parent_in_law_of(V,X), parent_in_law_of(W,X), U != V, W != V, U != W.
+:- parent_in_law_of(U,X), parent_in_law_of(V,X), is_male(U,U), is_male(V,V), U != V. 
+:- parent_in_law_of(U,X), parent_in_law_of(V,X), is_female(U,U), is_female(V,V), U != V. 
+## num grand parents constraints (Think about these constraints)
+:- grandparent_of(A,X), grandparent_of(B,X), grandparent_of(C,X), grandparent_of(D,X), grandparent_of(E,X),  A != B, A != C, A != D, A != E, B != C, B != D, B != E, C != D, C != E, D != E.
+:- grandmother_of(U,X), grandmother_of(V,X), grandmother_of(W,X), U != V, W != V, U != W.
+:- grandfather_of(U,X), grandfather_of(V,X), grandfather_of(W,X), U != V, W != V, U != W.
+## num spouses bounded by 2
+:- spouse_of(X,U), spouse_of(X,V), U != V.
+##only one paternal grandmother etc
+:- paternal_grandmother_of(U,X), paternal_grandmother_of(V,X), U != V.
+:- paternal_grandfather_of(U,X), paternal_grandfather_of(V,X), U != V.
+:- paternal_grandparent_of(U,X), paternal_grandparent_of(V,X), paternal_grandparent_of(W,X), U != V, W != V, U != W.
+:- maternal_grandmother_of(U,X), maternal_grandmother_of(V,X), U != V.
+:- maternal_grandfather_of(U,X), maternal_grandfather_of(V,X), U != V.
+:- maternal_grandparent_of(U,X), maternal_grandparent_of(V,X), maternal_grandparent_of(W,X), U != V, W != V, U != W.
+

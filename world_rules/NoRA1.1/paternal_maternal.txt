@@ -1,0 +1,54 @@
+##in clingo lingo
+##defintions
+paternal_aunt_or_uncle_of(Y, X) :- father_of(Z, X) , sibling_of(Y, Z).
+maternal_aunt_or_uncle_of(Y, X) :- mother_of(Z, X) , sibling_of(Y, Z).
+##
+paternal_grandparent_of(Y, X) :- father_of(Z, X) , parent_of(Y, Z).
+maternal_grandparent_of(Y, X) :- mother_of(Z, X) , parent_of(Y, Z).
+##
+## generalization
+paternal_aunt_or_uncle_of(X,Y) :- paternal_uncle_of(X,Y).
+paternal_aunt_or_uncle_of(X,Y) :- paternal_aunt_of(X,Y).
+aunt_or_uncle_of(X,Y) :- paternal_aunt_or_uncle_of(X,Y).
+maternal_aunt_or_uncle_of(X,Y) :- maternal_uncle_of(X,Y).
+maternal_aunt_or_uncle_of(X,Y) :- maternal_aunt_of(X,Y).
+aunt_or_uncle_of(X,Y) :- maternal_aunt_or_uncle_of(X,Y).
+##
+paternal_grandparent_of(X,Y) :- paternal_grandmother_of(X,Y).
+maternal_grandparent_of(X,Y) :- maternal_grandmother_of(X,Y).
+maternal_grandparent_of(X,Y) :- maternal_grandfather_of(X,Y).
+paternal_grandparent_of(X,Y) :- paternal_grandfather_of(X,Y).
+grandparent_of(X,Y) :- maternal_grandparent_of(X,Y).
+grandparent_of(X,Y) :- paternal_grandparent_of(X,Y).
+##
+## inversions gender
+paternal_grandfather_of(X,Y) :- paternal_grandparent_of(X,Y), is_male(X,X).
+paternal_grandmother_of(X,Y) :- paternal_grandparent_of(X,Y), is_female(X,X).
+maternal_grandfather_of(X,Y) :- maternal_grandparent_of(X,Y), is_male(X,X).
+maternal_grandmother_of(X,Y) :- maternal_grandparent_of(X,Y), is_female(X,X).
+##
+maternal_aunt_of(X,Y) :- maternal_aunt_or_uncle_of(X,Y), is_female(X,X). 
+maternal_uncle_of(X,Y) :- maternal_aunt_or_uncle_of(X,Y), is_male(X,X). 
+paternal_aunt_of(X,Y) :- paternal_aunt_or_uncle_of(X,Y), is_female(X,X). 
+paternal_uncle_of(X,Y) :- paternal_aunt_or_uncle_of(X,Y), is_male(X,X). 
+## universal rules
+parent_of(Y, X) :- mother_of(X,Z) , maternal_grandparent_of(Y, Z).
+parent_in_law_of(Y, X) :- mother_of(X,Z) , paternal_grandparent_of(Y, Z).
+parent_of(Y, X) :- father_of(X,Z) , paternal_grandparent_of(Y, Z). 
+parent_in_law_of(Y, X) :- father_of(X,Z) , maternal_grandparent_of(Y, Z). 
+sibling_of(X, Y) :- father_of(X,Z) , paternal_aunt_or_uncle_of(Y, Z).
+sibling_in_law_of(X, Y) :- mother_of(X,Z) , paternal_aunt_or_uncle_of(Y, Z).
+sibling_of(X, Y) :- mother_of(X,Z) , maternal_aunt_or_uncle_of(Y, Z).
+sibling_in_law_of(X, Y) :- father_of(X,Z) , maternal_aunt_or_uncle_of(Y, Z).
+## gender
+is_female(X,X) :- paternal_grandmother_of(X,Y).
+is_female(X,X) :- maternal_grandmother_of(X,Y).
+is_male(X,X) :- maternal_grandfather_of(X,Y).
+is_male(X,X) :- paternal_grandfather_of(X,Y).
+is_female(X,X) :- maternal_aunt_of(X,Y).
+is_female(X,X) :- paternal_aunt_of(X,Y).
+is_male(X,X) :- maternal_uncle_of(X,Y).
+is_male(X,X) :- paternal_uncle_of(X,Y).
+### constraints
+:- maternal_grandparent_of(X,Y) , paternal_grandparent_of(X,Y).
+:- maternal_aunt_or_uncle_of(X,Y), paternal_aunt_or_uncle_of(X,Y).

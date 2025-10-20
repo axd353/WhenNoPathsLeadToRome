@@ -1,0 +1,79 @@
+##in clingo lingo
+##Grandparent relations (inverse of grandson/granddaughter)
+grandparent_of(Y,X) :- grandchild_of(X,Y).
+grandchild_of(X,Y) :- grandparent_of(Y,X).
+grandparent_of(X,Y) :- grandfather_of(X,Y).
+grandparent_of(X,Y) :- grandmother_of(X,Y).
+grandmother_of(X,Y) :- grandparent_of(X,Y), is_female(X,X). 
+grandfather_of(X,Y) :- grandparent_of(X,Y), is_male(X,X). 
+##
+##
+##Parent relations (inverse of son/daughter)
+parent_of(Y,X) :- child_of(X,Y).
+child_of(Y,X) :- parent_of(X,Y).
+parent_of(X,Y) :- father_of(X,Y).
+parent_of(X,Y) :- mother_of(X,Y).
+mother_of(X,Y) :- parent_of(X,Y), is_female(X,X). 
+father_of(X,Y) :- parent_of(X,Y), is_male(X,X). 
+##
+##
+##Sibling relations (self-inverse)
+sibling_of(Y,X) :- sibling_of(X,Y), X != Y.
+sibling_of(X,Y) :- brother_of(X,Y).
+sibling_of(X,Y) :- sister_of(X,Y).
+sister_of(X,Y) :- sibling_of(X,Y) , is_female(X,X).
+brother_of(X,Y) :- sibling_of(X,Y) , is_male(X,X).
+##
+##Aunt/Uncle relations (inverse of nephew/niece)
+aunt_or_uncle_of(Y,X) :- nibling_of(X,Y).
+aunt_or_uncle_of(X,Y) :- aunt_of(X,Y).
+aunt_or_uncle_of(X,Y) :- uncle_of(X,Y).
+uncle_of(X,Y) :- aunt_or_uncle_of(X,Y) , is_male(X,X).
+aunt_of(X,Y) :- aunt_or_uncle_of(X,Y) , is_female(X,X).
+nibling_of(Y,X) :- aunt_or_uncle_of(X,Y).
+##
+##In-law relations (genderless version)
+parent_in_law_of(X,Y) :- father_in_law_of(X,Y).
+parent_in_law_of(X,Y) :- mother_in_law_of(X,Y).
+parent_in_law_of(Y,X) :- child_in_law_of(X,Y).
+child_in_law_of(Y,X) :- parent_in_law_of(X,Y).
+father_in_law_of(X,Y) :- parent_in_law_of(X,Y), is_male(X,X).
+mother_in_law_of(X,Y) :- parent_in_law_of(X,Y), is_female(X,X).
+##
+##Spouse relations (self-inverse)
+spouse_of(Y,X) :- spouse_of(X,Y), X != Y.
+spouse_of(X,Y) :- husband_of(X,Y).
+spouse_of(X,Y) :- wife_of(X,Y).
+husband_of(X,Y) :- spouse_of(X,Y), is_male(X,X).
+wife_of(X,Y) :- spouse_of(X,Y), is_female(X,X).
+##
+## child of
+child_of(X,Y) :- son_of(X,Y).
+child_of(X,Y) :- daughter_of(X,Y).
+daughter_of(X,Y) :- child_of(X,Y), is_female(X,X).
+son_of(X,Y) :- child_of(X,Y), is_male(X,X).
+##
+##Grandchild relations (genderless version)
+grandchild_of(X,Y) :- grandson_of(X,Y).
+grandchild_of(X,Y) :- granddaughter_of(X,Y).
+granddaughter_of(X,Y) :- grandchild_of(X,Y), is_female(X,X).
+grandson_of(X,Y) :- grandchild_of(X,Y), is_male(X,X).
+##
+##Nibling relations (genderless version of nephew/niece)
+nibling_of(X,Y) :- nephew_of(X,Y).
+nibling_of(X,Y) :- niece_of(X,Y).
+nephew_of(X,Y) :- nibling_of(X,Y) , is_male(X,X).
+niece_of(X,Y) :- nibling_of(X,Y) , is_female(X,X).
+##
+##child_in_law_of relations
+child_in_law_of(X,Y) :- son_in_law_of(X,Y).
+child_in_law_of(X,Y) :- daughter_in_law_of(X,Y).
+daughter_in_law_of(X,Y) :- child_in_law_of(X,Y), is_female(X,X).
+son_in_law_of(X,Y) :- child_in_law_of(X,Y), is_male(X,X).
+##
+##sibling_in_law_of relations (self-inverse) 
+sibling_in_law_of(Y,X) :- sibling_in_law_of(X,Y), X != Y.
+sibling_in_law_of(X,Y) :- brother_in_law_of(X,Y).
+sibling_in_law_of(X,Y) :- sister_in_law_of(X,Y).
+sister_in_law_of(X,Y) :- sibling_in_law_of(X,Y) , is_female(X,X).
+brother_in_law_of(X,Y) :- sibling_in_law_of(X,Y) , is_male(X,X).

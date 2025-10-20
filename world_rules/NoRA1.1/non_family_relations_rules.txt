@@ -1,0 +1,46 @@
+##in clingo lingo
+living_in_same_place(Y,X) :- is_underage(X,X), parent_of(Y,X).
+living_in(Y,Z) :- living_in_same_place(X,Y), living_in(X,Z).
+living_in_same_place(X,Y) :- living_in_same_place(Y,X).
+living_in_same_place(X,Y) :- living_in_same_place(X,Z), living_in_same_place(Z,Y), Y != X.
+living_in_same_place(Y,X) :- school_mates_with(Y,X).
+living_in_same_place(Y,X) :- colleague_of(Y,X).
+colleague_of(X,Y) :- colleague_of(Y,X).
+colleague_of(X,Y) :- colleague_of(X,Z), colleague_of(Z,Y), Y != X.
+school_mates_with(X,Y) :- school_mates_with(Y,X), Y != X.
+school_mates_with(X,Y) :- school_mates_with(X,Z), school_mates_with(Z,Y), Y != X.
+## child canot do grown up things 
+:- is_underage(X,X), spouse_of(X,Y).
+:- is_underage(X,X), parent_of(X,Y).
+:- is_underage(X,X), grandparent_of(X,Y).
+:- colleague_of(X,Y), is_underage(X,X).
+##
+##Pairwise exclusions to enforce mutual exclusivity
+:- is_person(X), is_place(X).  
+##Type definitions for constants in the domain
+is_person(X) :- is_underage(X,X).
+is_person(X) :- living_in_same_place(X,Y).
+is_person(X) :- school_mates_with(X,Y).
+is_person(X) :- colleague_of(X,Y).
+:- is_female(X,X), is_male(X,X).
+##Place-related typing rules
+is_place(Z) :- living_in(X,Z).
+is_person(X) :- living_in(X,Z).
+:- living_in(X, V), living_in(X, U), U != V.
+##Mutual exclusion constraints
+## Person typing rules for all relationship participants
+is_person(X) :- aunt_or_uncle_of(X,Y).
+is_person(Y) :- aunt_or_uncle_of(X,Y).
+is_person(X) :- parent_of(X,Y).
+is_person(Y) :- parent_of(X,Y).
+is_person(X) :- grandparent_of(X,Y).
+is_person(Y) :- grandparent_of(X,Y).
+is_person(X) :- parent_in_law_of(X,Y).
+is_person(Y) :- parent_in_law_of(X,Y).
+is_person(X) :- sibling_of(X,Y).
+is_person(X) :- spouse_of(X,Y).
+is_person(X) :- sibling_in_law_of(X,Y).
+is_person(X) :- nibling_of(X,Y).
+is_person(Y) :- nibling_of(X,Y).
+## school goers are all underage. 
+is_underage(X,X) :- school_mates_with(X,U).
