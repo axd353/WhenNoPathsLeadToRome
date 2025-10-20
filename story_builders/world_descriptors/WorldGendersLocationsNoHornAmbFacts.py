@@ -61,6 +61,9 @@ class WorldGendersLocationsNoHornAmbFacts(WorldGendersLocationsNoHorn):
             low, high = config["max_ambiguity_range"]
             self.max_ambiguity = random.randint(low, high)
             exp_settings["max_ambiguity"] = self.max_ambiguity
+        if "max_num_refinements" in config:
+            self.max_num_branches = int(config["max_num_refinements"])
+            exp_settings["max_num_refinements"] = self.max_num_branches
         ### resetting stuff at the begiining of new story
         self.num_amb_nodes = 0
         self.num_branches_in_current_story = 1
