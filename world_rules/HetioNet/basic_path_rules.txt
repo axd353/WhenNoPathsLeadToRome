@@ -1,0 +1,28 @@
+##in clingo lingo
+##horn_rules regulations (compound-gene, gene-gene relationships)
+up_regulates(C1, G) :- ss1(C1, C2) , up_regulates(C2, G).
+dwn_regulates(C1, G) :- ss1(C1, C2) , dwn_regulates(C2, G).
+up_regulates(C, G2) :- dwn_regulates(C, G1), dwn_regulates(G1, G2).
+dwn_regulates(C, G2) :- dwn_regulates(C, G1), up_regulates(G1, G2).
+dwn_regulates(C, G2) :- up_regulates(C, G1), dwn_regulates(G1, G2).
+up_regulates(C, G2) :- up_regulates(C, G1), up_regulates(G1, G2).
+## compound -desease reltionships , COMPOUND-COMPOUND relations
+palliates(C1, D) :-  ss2(C1, C2) , palliates(C2, D).
+no_side_effect(C1, C1) :- ss3(C1, C2) , no_side_effect(C2, C2).
+has_side_effect(C1, C1) :- ss3(C1, C2) , has_side_effect(C2, C2).
+## transitivity
+ss1(C1,C3) :- ss1(C1,C2) , ss1(C2,C3), C1 != C3.
+ss2(C1,C3) :- ss2(C1,C2) , ss2(C2,C3), C1 != C3.
+ss3(C1,C3) :- ss3(C1,C2) , ss3(C2,C3), C1 != C3.
+##treat 
+use_to_treat(C, D) :- no_side_effect(C, C), palliates(C, D).
+do_not_use_to_treat(C, D) :- has_side_effect(C, C), is_disease(D,D).
+no_side_effect(C, C) :- use_to_treat(C, D).
+palliates(C, D) :- use_to_treat(C, D).
+## genes, compounds and their side effects
+no_side_effect(C, C) :- dwn_regulates(C, G), has_side_effect(G, G).
+has_side_effect(C, C) :- up_regulates(C, G), has_side_effect(G, G).
+palliates(C, D) :- up_regulates(C, G), palliates(G, D).
+##direct evidence of paths immediately suggest treatment , compounds canot bind to side effect genes if it is binding to the palliating genes
+use_to_treat(C, D) :- up_regulates(C, G), palliates(G, D), is_compound(C,C).
+do_not_use_to_treat(C, D) :- dwn_regulates(C, G), palliates(G, D) , is_compound(C,C).

@@ -1,0 +1,37 @@
+##in clingo lingo
+##constraints
+:- is_gene(X,X), is_compound(X,X).
+:- is_disease(X,X), is_compound(X,X).
+:- is_disease(X,X), is_gene(X,X).
+:- up_regulates(C, G), is_compound(G,G).
+:- dwn_regulates(C, G), is_compound(G,G).
+:- up_regulates(C, G), is_disease(G,G).
+:- dwn_regulates(C, G), is_disease(G,G).
+:- up_regulates(C, G), is_disease(C,C).
+:- dwn_regulates(C, G), is_disease(C,C).
+##STRUCTURAL SIMILARITIES grep -o -h -E '\bis_[a-zA-Z0-9_]*' *.txt | sort -u
+:- ss1(C1, C2) , is_disease(C1,C1).
+:- ss1(C1, C2) , is_gene(C1,C1).
+:- ss2(C1, C2) , is_disease(C1,C1).
+:- ss2(C1, C2) , is_gene(C1,C1).
+:- ss3(C1, C2) , is_disease(C1,C1).
+:- ss3(C1, C2) , is_gene(C1,C1).
+## ONLY COMPOUNDS and gene expression HAVE SIDE EFFECTS or can palliate
+:- has_side_effect(C, C) , is_disease(C,C).
+:- no_side_effect(C, C) , is_disease(C,C).
+:- has_side_effect(C, C), no_side_effect(C, C).
+:- use_to_treat(C, D) , do_not_use_to_treat(C, D).
+:- palliates(C, D) ,is_disease(C,C).
+:- palliates(C, D) , is_gene(D,D).
+:- palliates(C, D) ,is_compound(D,D).
+## correct domain for use_to_treat, do_not_use_to_treat
+:- use_to_treat(C,D), is_gene(C,C).
+:- use_to_treat(C,D), is_gene(D,D).
+:- use_to_treat(C,D), is_disease(C,C).
+:- use_to_treat(C,D), is_compound(D,D).
+:- do_not_use_to_treat(C,D), is_gene(C,C).
+:- do_not_use_to_treat(C,D), is_gene(D,D).
+:- do_not_use_to_treat(C,D), is_disease(C,C).
+:- do_not_use_to_treat(C,D), is_compound(D,D).
+## cannot up -regulate and down -regualte together
+:- up_regulates(C, G), dwn_regulates(C, G).

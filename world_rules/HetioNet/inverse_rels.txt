@@ -1,0 +1,4 @@
+##in clingo lingo
+ss1(C1,C2) :- ss1(C2,C1), C1 != C2.
+ss2(C1,C2) :- ss2(C2,C1), C1 != C2.
+ss3(C1,C2) :- ss3(C2,C1), C1 != C2.

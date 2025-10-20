@@ -352,7 +352,7 @@ if __name__ == "__main__":
     # output_file = "../output_stories/test_stories_bench_ASP_Nora1.1.csv"
     # # output_file = "stories/test_stories_bench_ASP_genders40k.csv" #turn on ambiguity 
     # builder = BenchmarkDatasetBuilderASP('configs/config_NoRA1.1.json', seed=seed, output_file=output_file)
-    # total_num_stories = 160   # Total stories to generate
+    # total_num_stories = 160   # Number of problem instances you want to generate
     # ent_nums = np.random.choice([22,24,26,27,28,30], size=total_num_stories) #number of nodes in the stories will be sampled from this 
     # max_facts_list = np.random.randint(40, 55, size=total_num_stories)##number of edges in the story will be sampled from this 
     # num_tries = 1000
@@ -364,7 +364,7 @@ if __name__ == "__main__":
     # seed = 1990
     # output_file = "../output_stories/test_stories_bench_ASP_Nora.csv"
     # builder = BenchmarkDatasetBuilderASP('configs/config_NoRA.json', seed=seed, output_file=output_file)
-    # total_num_stories = 100   # Total stories to generate
+    # total_num_stories = 100   # Number of problem instances you want to generate 
     # ent_nums = np.random.choice([20,23,24,25], size=total_num_stories)#number of nodes in the stories will be sampled from this 
     # max_facts_list = np.random.randint(33, 46, size=total_num_stories)##number of edges in the story will be sampled from this 
     # num_tries = 2000
@@ -372,4 +372,15 @@ if __name__ == "__main__":
     # print("Generated Dataset:")
     # print(dataset_df.shape)
 
+    ##------------------------------------------Example Hetionet =================================================
+    # seed = 10
+    # output_file = "../output_stories/test_stories_bench_ASP_Nora.csv"
+    # builder = BenchmarkDatasetBuilderASP('configs/config_HetioNet.json', seed=seed, output_file=output_file)
+    # total_num_stories = 120   # Number of problem instances to genrate 
+    # ent_nums = np.random.choice([18,19,20,21], size=total_num_stories) #number of nodes in the stories will be sampled from this 
+    # max_facts_list = np.random.randint(40, 44, size=total_num_stories) #number of edges in the stories will be sampled from this 
+    # num_tries = 2000
+    # dataset_df = builder.build_dataset(total_num_stories, ent_nums, max_facts_list, too_many_consecutive_contradictions=num_tries)
+    # print(f"Generated Dataset: {output_file} ")
+    # print(dataset_df.shape)
     
