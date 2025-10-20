@@ -1,1 +1,3 @@
 logs/*.log
+output_stories/*.csv
+

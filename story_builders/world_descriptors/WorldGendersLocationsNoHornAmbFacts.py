@@ -26,7 +26,7 @@ class WorldGendersLocationsNoHornAmbFacts(WorldGendersLocationsNoHorn):
         self.max_ambiguity = 2 
         self.amb_par_lower_bound_on = False
         self.num_branches_in_current_story = 1
-        self.max_num_branches = 20 # todo make this an experiment parameter, this =0 means no ambiguity 
+        self.max_num_branches = 0 # todo make this an experiment parameter, this =0 means no ambiguity 
         self.p_branch_multiplier = 1
         self.p_max_branching_realized = 0
         self.last_save_time = time.time()

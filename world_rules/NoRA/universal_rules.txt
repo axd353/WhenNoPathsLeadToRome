@@ -1,0 +1,42 @@
+##in clingo lingo
+nibling_of(Y, X) :- sibling_of(Z1, X) , child_of(Y, Z1).
+nibling_of(Y, X) :- sibling_in_law_of(Z1, X) , child_of(Y, Z1).
+parent_of(Y, X) :- sibling_of(Z1, X) , parent_of(Y, Z1).
+child_of(Y, X) :- child_of(Z1, X) , sibling_of(Y, Z1).
+child_of(Y, X) :- child_of(Z1, X) , sibling_of(Y, Z1).
+aunt_or_uncle_of(Y, X) :- parent_of(Z1, X) , sibling_of(Y, Z1).
+sibling_of(Y, X) :- parent_of(Z1, X) , child_of(Y, Z1), Y != X.
+granddaughter_of(Y, X) :- child_of(Z1, X) , daughter_of(Y, Z1).
+grandson_of(Y, X) :- child_of(Z1, X) , son_of(Y, Z1).
+grandchild_of(Y, X) :- child_of(Z1, X) , child_of(Y, Z1).
+child_in_law_of(Y, X) :- child_of(Z1, X) , spouse_of(Y, Z1).
+parent_in_law_of(Y, X) :- spouse_of(Z1, X) , parent_of(Y, Z1).
+parent_of(X, Y) :- spouse_of(X, Z) , parent_of(Z, Y).
+grandparent_of(Y, X) :- parent_of(Z1, X) , parent_of(Y, Z1).
+sibling_in_law_of(Y, X) :- sibling_of(Z1, X) , spouse_of(Y, Z1).
+##
+## Gender implication rules (X must be female)
+belongs_to_group(X, female) :- mother_of(X,Y).
+belongs_to_group(X, female) :- grandmother_of(X,Y).
+belongs_to_group(X, female) :- sister_of(X,Y).
+belongs_to_group(X, female) :- aunt_of(X,Y).
+belongs_to_group(X, female) :- wife_of(X,Y).
+belongs_to_group(X, female) :- daughter_of(X,Y).
+belongs_to_group(X, female) :- granddaughter_of(X,Y).
+belongs_to_group(X, female) :- niece_of(X,Y).
+belongs_to_group(X, female) :- daughter_in_law_of(X,Y).
+belongs_to_group(X, female) :- sister_in_law_of(X,Y).
+belongs_to_group(X, female) :- mother_in_law_of(X,Y).
+##
+## Gender implication rules (X must be male)
+belongs_to_group(X, male) :- father_of(X,Y).
+belongs_to_group(X, male) :- grandfather_of(X,Y).
+belongs_to_group(X, male) :- brother_of(X,Y).
+belongs_to_group(X, male) :- uncle_of(X,Y).
+belongs_to_group(X, male) :- husband_of(X,Y).
+belongs_to_group(X, male) :- son_of(X,Y).
+belongs_to_group(X, male) :- grandson_of(X,Y).
+belongs_to_group(X, male) :- nephew_of(X,Y).
+belongs_to_group(X, male) :- son_in_law_of(X,Y).
+belongs_to_group(X, male) :- brother_in_law_of(X,Y).
+belongs_to_group(X, male) :- father_in_law_of(X,Y).

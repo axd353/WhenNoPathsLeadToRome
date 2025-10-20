@@ -1,0 +1,42 @@
+##in clingo lingo
+### properties 
+is_property(no_sons).
+is_property(no_daughters).
+is_property(no_brothers).
+is_property(no_sisters).
+is_property(no_siblings).
+is_property(no_children).
+## implications
+belongs_to_group(Y, female) :- sibling_of(X,Y) , has_property(X, no_brothers).
+belongs_to_group(Y, male) :- sibling_of(X,Y) , has_property(X, no_sisters).
+## sons and daughters
+belongs_to_group(Y, female) :- parent_of(X,Y), has_property(X, no_sons).  
+belongs_to_group(Y, male) :- parent_of(X,Y), has_property(X, no_daughters).  
+## paternal-maternal implications 
+maternal_aunt_of(X,Y) :- aunt_of(X,Y), paternal_grandparent_of(Z,Y), has_property(Z, no_daughters).
+paternal_aunt_of(X,Y) :- aunt_of(X,Y), maternal_grandparent_of(Z,Y), has_property(Z, no_daughters).
+maternal_uncle_of(X,Y) :- uncle_of(X,Y), paternal_grandparent_of(Z,Y), has_property(Z, no_sons).
+paternal_uncle_of(X,Y) :- uncle_of(X,Y), maternal_grandparent_of(Z,Y), has_property(Z, no_sons).
+maternal_aunt_or_uncle_of(X,Y) :- aunt_or_uncle_of(X,Y) , has_property(X, no_brothers).
+paternal_aunt_or_uncle_of(X,Y) :- aunt_or_uncle_of(X,Y) , has_property(X, no_sisters).
+paternal_grandparent_of(X,Y) :- grandparent_of(X,Y) , has_property(X, no_daughters).
+maternal_grandparent_of(X,Y) :- grandparent_of(X,Y) , has_property(X, no_sons).
+##has_property in the head
+has_property(X, no_daughters):- parent_of(X,Y), belongs_to_group(Y, male), has_property(Y, no_sisters). 
+has_property(X, no_sons):- parent_of(X,Y), belongs_to_group(Y, female), has_property(Y, no_brothers). 
+has_property(Y, no_brothers) :- parent_of(X,Y), has_property(X, no_sons).
+has_property(Y, no_sisters) :- parent_of(X,Y), has_property(X, no_daughters).  
+##constraints
+:- has_property(Y, no_brothers), brother_of(X,Y).
+:- has_property(Y, no_sisters), sister_of(X,Y).
+:- has_property(Y, no_daughters), daughter_of(X,Y).
+:- has_property(Y, no_sons), son_of(X,Y).
+## never generate these heads as fact.. only to generate this predictae, by CLark's completion is by this body
+has_property(Y, no_siblings) :- has_property(Y, no_brothers), has_property(Y, no_sisters).
+has_property(Y, no_children) :- has_property(Y, no_daughters), has_property(Y, no_sons).
+## very rare you will get these contradiction
+:- sibling_in_law_of(X,Y), has_property(Y, no_siblings) , has_property(X, no_siblings).
+:- aunt_or_uncle_of(X,Y), has_property(X, no_siblings).
+:- parent_of(X,Y), has_property(X, no_children).
+:- grandparent_of(X,Y), has_property(X, no_children).
+:- parent_in_law_of(X,Y), has_property(X, no_children).

@@ -1,0 +1,27 @@
+{
+    "world_rules_dir": "../world_rules/NoRA",
+    "world_obj_class": "WorldGendersLocationsNoHornAmbFactsSp",
+    "calculate_difficulty": "True",
+    "experiment_with_params": true,
+    # percent of entities who are person 
+    "person_percent_range": [0.75, 0.82], 
+    # percent of people who are male
+    "male_prob_range": [0.4, 0.6],
+    # probability of explicitly assigning locatin to people 
+    "assign_loc_prob_range": [0.09, 0.20],
+    # probability of creating people with unknown gender
+    "no_gender_assign": [0.07, 0.40],
+    #probability that people live in the same place
+    "prob_living_in_same_place_range": [0.06, 0.10],
+    #prob of being underage
+    "proportion_of_underage": [0.14, 0.25],
+    #probability of ambiguous facts being generated
+    "ambig_fact_prob_range": [0.05, 0.08],
+    #max_ambiguity_range
+    "max_ambiguity_range": [2,3],
+    #with what probability does the no_sons tag get attached
+    "prob__range_property_no_bros": [0.04, 0.10],
+    "prob__range_property_no_sis": [0.04, 0.10],
+    "prob__range_property_no_dghter": [0.04, 0.10],
+    "prob__range_property_no_son": [0.04, 0.10]
+}

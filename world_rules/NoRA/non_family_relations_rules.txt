@@ -1,0 +1,76 @@
+##in clingo lingo
+living_in_same_place(Y,X) :- belongs_to(X, underage), parent_of(Y,X).
+living_in(Y,Z) :- living_in_same_place(X,Y), living_in(X,Z).
+living_in_same_place(X,Y) :- living_in_same_place(Y,X).
+living_in_same_place(Y,X) :- school_mates_with(Y,X).
+living_in_same_place(Y,X) :- colleague_of(Y,X).
+colleague_of(X,Y) :- colleague_of(Y,X).
+colleague_of(X,Y) :- colleague_of(X,Z), colleague_of(Z,Y).
+school_mates_with(X,Y) :- school_mates_with(Y,X), Y != X.
+school_mates_with(X,Y) :- school_mates_with(X,Z), school_mates_with(Z,Y), Y != X.
+## child canot do grown up things 
+:- belongs_to(X, underage), spouse_of(X,Y).
+:- belongs_to(X, underage), parent_of(X,Y).
+:- belongs_to(X, underage), grandparent_of(X,Y).
+:- colleague_of(X,Y), belongs_to(X, underage).
+##
+##Pairwise exclusions to enforce mutual exclusivity
+:- is_person(X), is_place(X).  
+:- is_person(X), is_gender(X).  
+:- is_person(X), is_agegroup(X).
+:- is_person(X), is_property(X).
+:- is_place(X), is_gender(X).  
+:- is_place(X), is_agegroup(X). 
+:- is_place(X), is_property(X). 
+:- is_gender(X), is_agegroup(X).
+:- is_gender(X), is_property(X).
+:- is_agegroup(X), is_property(X).
+is_agegroup(underage).
+is_agegroup(Y):- belongs_to(X,Y).
+##Type definitions for constants in the domain
+is_person(X) :- belongs_to(X, underage).
+is_person(X) :- living_in_same_place(X,Y).
+is_person(Y) :- living_in_same_place(X,Y).
+is_person(X) :- school_mates_with(X,Y).
+is_person(Y) :- school_mates_with(X,Y).
+is_person(X) :- colleague_of(X,Y).
+is_person(Y) :- colleague_of(X,Y).
+##Gender-related typing rules
+is_gender(X) :- belongs_to_group(Y,X).
+is_person(Y) :- belongs_to_group(Y,X).
+is_gender(male).
+is_gender(female).
+:- belongs_to_group(X,female), belongs_to_group(X,male).
+##Place-related typing rules
+is_place(Z) :- living_in(X,Z).
+is_person(X) :- living_in(X,Z).
+:- living_in(X, V), living_in(X, U), U != V.
+##Mutual exclusion constraints
+:- is_person(X), is_place(X).
+:- is_person(X), is_gender(X).
+:- is_place(X), is_gender(X).
+## Person typing rules for all relationship participants
+is_person(X) :- aunt_or_uncle_of(X,Y).
+is_person(Y) :- aunt_or_uncle_of(X,Y).
+is_person(X) :- parent_of(X,Y).
+is_person(Y) :- parent_of(X,Y).
+is_person(X) :- grandparent_of(X,Y).
+is_person(Y) :- grandparent_of(X,Y).
+is_person(X) :- parent_in_law_of(X,Y).
+is_person(Y) :- parent_in_law_of(X,Y).
+is_person(X) :- sibling_of(X,Y).
+is_person(Y) :- sibling_of(X,Y).
+is_person(X) :- spouse_of(X,Y).
+is_person(Y) :- spouse_of(X,Y).
+is_person(X) :- sibling_in_law_of(X,Y).
+is_person(Y) :- sibling_in_law_of(X,Y).
+is_person(X) :- nibling_of(X,Y).
+is_person(Y) :- nibling_of(X,Y).
+is_person(X) :- child_of(X,Y).
+is_person(Y) :- child_of(X,Y).
+is_person(X) :- grandchild_of(X,Y).
+is_person(Y) :- grandchild_of(X,Y).
+is_person(X) :- child_in_law_of(X,Y).
+is_person(Y) :- child_in_law_of(X,Y).
+## school goers are all underage. 
+belongs_to(X, underage) :- school_mates_with(X,U).

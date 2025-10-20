@@ -225,7 +225,7 @@ class WorldGendersLocationsNoHornAmbFactsSp(WorldGendersLocationsNoHornAmbFacts)
             if new_rows:
                 new_rows_df = pd.DataFrame(new_rows)
                 df = pd.concat([df, new_rows_df], ignore_index=True)
-            
+            df['query_label'] = df.apply(lambda r: r['other_relationships'] + [r['query_relation']],axis=1)
             # Call parent's save_dataset
             super().save_dataset(df, file_path)
             
