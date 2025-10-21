@@ -1,0 +1,55 @@
+up_regulates(C1, G) :- ss1(C1, C2) , up_regulates(C2, G).
+dwn_regulates(C1, G) :- ss1(C1, C2) , dwn_regulates(C2, G).
+up_regulates(C, G2) :- dwn_regulates(C, G1), dwn_regulates(G1, G2).
+dwn_regulates(C, G2) :- dwn_regulates(C, G1), up_regulates(G1, G2).
+dwn_regulates(C, G2) :- up_regulates(C, G1), dwn_regulates(G1, G2).
+up_regulates(C, G2) :- up_regulates(C, G1), up_regulates(G1, G2).
+palliates(C1, D) :-  ss2(C1, C2) , palliates(C2, D).
+no_side_effect(C1, C1) :- ss3(C1, C2) , no_side_effect(C2, C2).
+has_side_effect(C1, C1) :- ss3(C1, C2) , has_side_effect(C2, C2).
+ss1(C1,C3) :- ss1(C1,C2) , ss1(C2,C3), C1 != C3.
+ss2(C1,C3) :- ss2(C1,C2) , ss2(C2,C3), C1 != C3.
+ss3(C1,C3) :- ss3(C1,C2) , ss3(C2,C3), C1 != C3.
+use_to_treat(C, D) :- no_side_effect(C, C), palliates(C, D).
+do_not_use_to_treat(C, D) :- has_side_effect(C, C), is_disease(D,D).
+no_side_effect(C, C) :- use_to_treat(C, D).
+palliates(C, D) :- use_to_treat(C, D).
+no_side_effect(C, C) :- dwn_regulates(C, G), has_side_effect(G, G).
+has_side_effect(C, C) :- up_regulates(C, G), has_side_effect(G, G).
+palliates(C, D) :- up_regulates(C, G), palliates(G, D).
+use_to_treat(C, D) :- up_regulates(C, G), palliates(G, D), is_compound(C,C).
+do_not_use_to_treat(C, D) :- dwn_regulates(C, G), palliates(G, D) , is_compound(C,C).
+ss1(C1,C2) :- ss1(C2,C1), C1 != C2.
+ss2(C1,C2) :- ss2(C2,C1), C1 != C2.
+ss3(C1,C2) :- ss3(C2,C1), C1 != C2.
+:- is_gene(X,X), is_compound(X,X).
+:- is_disease(X,X), is_compound(X,X).
+:- is_disease(X,X), is_gene(X,X).
+:- up_regulates(C, G), is_compound(G,G).
+:- dwn_regulates(C, G), is_compound(G,G).
+:- up_regulates(C, G), is_disease(G,G).
+:- dwn_regulates(C, G), is_disease(G,G).
+:- up_regulates(C, G), is_disease(C,C).
+:- dwn_regulates(C, G), is_disease(C,C).
+:- ss1(C1, C2) , is_disease(C1,C1).
+:- ss1(C1, C2) , is_gene(C1,C1).
+:- ss2(C1, C2) , is_disease(C1,C1).
+:- ss2(C1, C2) , is_gene(C1,C1).
+:- ss3(C1, C2) , is_disease(C1,C1).
+:- ss3(C1, C2) , is_gene(C1,C1).
+:- has_side_effect(C, C) , is_disease(C,C).
+:- no_side_effect(C, C) , is_disease(C,C).
+:- has_side_effect(C, C), no_side_effect(C, C).
+:- use_to_treat(C, D) , do_not_use_to_treat(C, D).
+:- palliates(C, D) ,is_disease(C,C).
+:- palliates(C, D) , is_gene(D,D).
+:- palliates(C, D) ,is_compound(D,D).
+:- use_to_treat(C,D), is_gene(C,C).
+:- use_to_treat(C,D), is_gene(D,D).
+:- use_to_treat(C,D), is_disease(C,C).
+:- use_to_treat(C,D), is_compound(D,D).
+:- do_not_use_to_treat(C,D), is_gene(C,C).
+:- do_not_use_to_treat(C,D), is_gene(D,D).
+:- do_not_use_to_treat(C,D), is_disease(C,C).
+:- do_not_use_to_treat(C,D), is_compound(D,D).
+:- up_regulates(C, G), dwn_regulates(C, G).

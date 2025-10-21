@@ -1,0 +1,285 @@
+grandparent_of(Y,X) :- grandchild_of(X,Y).
+grandchild_of(X,Y) :- grandparent_of(Y,X).
+grandparent_of(X,Y) :- grandfather_of(X,Y).
+grandparent_of(X,Y) :- grandmother_of(X,Y).
+grandmother_of(X,Y) :- grandparent_of(X,Y), belongs_to_group(X, female).
+grandfather_of(X,Y) :- grandparent_of(X,Y), belongs_to_group(X, male).
+parent_of(Y,X) :- child_of(X,Y).
+child_of(Y,X) :- parent_of(X,Y).
+parent_of(X,Y) :- father_of(X,Y).
+parent_of(X,Y) :- mother_of(X,Y).
+mother_of(X,Y) :- parent_of(X,Y), belongs_to_group(X, female).
+father_of(X,Y) :- parent_of(X,Y), belongs_to_group(X, male).
+sibling_of(Y,X) :- sibling_of(X,Y), X != Y.
+sibling_of(X,Y) :- brother_of(X,Y).
+sibling_of(X,Y) :- sister_of(X,Y).
+sister_of(X,Y) :- sibling_of(X,Y) , belongs_to_group(X, female).
+brother_of(X,Y) :- sibling_of(X,Y) , belongs_to_group(X, male).
+aunt_or_uncle_of(Y,X) :- nibling_of(X,Y).
+aunt_or_uncle_of(X,Y) :- aunt_of(X,Y).
+aunt_or_uncle_of(X,Y) :- uncle_of(X,Y).
+uncle_of(X,Y) :- aunt_or_uncle_of(X,Y) , belongs_to_group(X, male).
+aunt_of(X,Y) :- aunt_or_uncle_of(X,Y) , belongs_to_group(X, female).
+nibling_of(Y,X) :- aunt_or_uncle_of(X,Y).
+parent_in_law_of(X,Y) :- father_in_law_of(X,Y).
+parent_in_law_of(X,Y) :- mother_in_law_of(X,Y).
+parent_in_law_of(Y,X) :- child_in_law_of(X,Y).
+child_in_law_of(Y,X) :- parent_in_law_of(X,Y).
+father_in_law_of(X,Y) :- parent_in_law_of(X,Y), belongs_to_group(X, male).
+mother_in_law_of(X,Y) :- parent_in_law_of(X,Y), belongs_to_group(X, female).
+spouse_of(Y,X) :- spouse_of(X,Y), X != Y.
+spouse_of(X,Y) :- husband_of(X,Y).
+spouse_of(X,Y) :- wife_of(X,Y).
+husband_of(X,Y) :- spouse_of(X,Y), belongs_to_group(X, male).
+wife_of(X,Y) :- spouse_of(X,Y), belongs_to_group(X, female).
+child_of(X,Y) :- son_of(X,Y).
+child_of(X,Y) :- daughter_of(X,Y).
+daughter_of(X,Y) :- child_of(X,Y), belongs_to_group(X, female).
+son_of(X,Y) :- child_of(X,Y), belongs_to_group(X, male).
+grandchild_of(X,Y) :- grandson_of(X,Y).
+grandchild_of(X,Y) :- granddaughter_of(X,Y).
+granddaughter_of(X,Y) :- grandchild_of(X,Y), belongs_to_group(X, female).
+grandson_of(X,Y) :- grandchild_of(X,Y), belongs_to_group(X, male).
+nibling_of(X,Y) :- nephew_of(X,Y).
+nibling_of(X,Y) :- niece_of(X,Y).
+nephew_of(X,Y) :- nibling_of(X,Y) , belongs_to_group(X, male).
+niece_of(X,Y) :- nibling_of(X,Y) , belongs_to_group(X, female).
+child_in_law_of(X,Y) :- son_in_law_of(X,Y).
+child_in_law_of(X,Y) :- daughter_in_law_of(X,Y).
+daughter_in_law_of(X,Y) :- child_in_law_of(X,Y), belongs_to_group(X, female).
+son_in_law_of(X,Y) :- child_in_law_of(X,Y), belongs_to_group(X, male).
+sibling_in_law_of(Y,X) :- sibling_in_law_of(X,Y), X != Y.
+sibling_in_law_of(X,Y) :- brother_in_law_of(X,Y).
+sibling_in_law_of(X,Y) :- sister_in_law_of(X,Y).
+sister_in_law_of(X,Y) :- sibling_in_law_of(X,Y) , belongs_to_group(X, female).
+brother_in_law_of(X,Y) :- sibling_in_law_of(X,Y) , belongs_to_group(X, male).
+belongs_to_group(Y, female) :- sibling_of(X,Y) , has_property(X, no_brothers).
+belongs_to_group(Y, male) :- sibling_of(X,Y) , has_property(X, no_sisters).
+belongs_to_group(Y, female) :- parent_of(X,Y), has_property(X, no_sons).
+belongs_to_group(Y, male) :- parent_of(X,Y), has_property(X, no_daughters).
+maternal_aunt_of(X,Y) :- aunt_of(X,Y), paternal_grandparent_of(Z,Y), has_property(Z, no_daughters).
+paternal_aunt_of(X,Y) :- aunt_of(X,Y), maternal_grandparent_of(Z,Y), has_property(Z, no_daughters).
+maternal_uncle_of(X,Y) :- uncle_of(X,Y), paternal_grandparent_of(Z,Y), has_property(Z, no_sons).
+paternal_uncle_of(X,Y) :- uncle_of(X,Y), maternal_grandparent_of(Z,Y), has_property(Z, no_sons).
+maternal_aunt_or_uncle_of(X,Y) :- aunt_or_uncle_of(X,Y) , has_property(X, no_brothers).
+paternal_aunt_or_uncle_of(X,Y) :- aunt_or_uncle_of(X,Y) , has_property(X, no_sisters).
+paternal_grandparent_of(X,Y) :- grandparent_of(X,Y) , has_property(X, no_daughters).
+maternal_grandparent_of(X,Y) :- grandparent_of(X,Y) , has_property(X, no_sons).
+has_property(X, no_daughters):- parent_of(X,Y), belongs_to_group(Y, male), has_property(Y, no_sisters).
+has_property(X, no_sons):- parent_of(X,Y), belongs_to_group(Y, female), has_property(Y, no_brothers).
+has_property(Y, no_brothers) :- parent_of(X,Y), has_property(X, no_sons).
+has_property(Y, no_sisters) :- parent_of(X,Y), has_property(X, no_daughters).
+:- has_property(Y, no_brothers), brother_of(X,Y).
+:- has_property(Y, no_sisters), sister_of(X,Y).
+:- has_property(Y, no_daughters), daughter_of(X,Y).
+:- has_property(Y, no_sons), son_of(X,Y).
+has_property(Y, no_siblings) :- has_property(Y, no_brothers), has_property(Y, no_sisters).
+has_property(Y, no_children) :- has_property(Y, no_daughters), has_property(Y, no_sons).
+:- sibling_in_law_of(X,Y), has_property(Y, no_siblings) , has_property(X, no_siblings).
+:- aunt_or_uncle_of(X,Y), has_property(X, no_siblings).
+:- parent_of(X,Y), has_property(X, no_children).
+:- grandparent_of(X,Y), has_property(X, no_children).
+:- parent_in_law_of(X,Y), has_property(X, no_children).
+nibling_of(Y, X) :- sibling_of(Z1, X) , child_of(Y, Z1).
+nibling_of(Y, X) :- sibling_in_law_of(Z1, X) , child_of(Y, Z1).
+parent_of(Y, X) :- sibling_of(Z1, X) , parent_of(Y, Z1).
+child_of(Y, X) :- child_of(Z1, X) , sibling_of(Y, Z1).
+child_of(Y, X) :- child_of(Z1, X) , sibling_of(Y, Z1).
+aunt_or_uncle_of(Y, X) :- parent_of(Z1, X) , sibling_of(Y, Z1).
+sibling_of(Y, X) :- parent_of(Z1, X) , child_of(Y, Z1), Y != X.
+granddaughter_of(Y, X) :- child_of(Z1, X) , daughter_of(Y, Z1).
+grandson_of(Y, X) :- child_of(Z1, X) , son_of(Y, Z1).
+grandchild_of(Y, X) :- child_of(Z1, X) , child_of(Y, Z1).
+child_in_law_of(Y, X) :- child_of(Z1, X) , spouse_of(Y, Z1).
+parent_in_law_of(Y, X) :- spouse_of(Z1, X) , parent_of(Y, Z1).
+parent_of(X, Y) :- spouse_of(X, Z) , parent_of(Z, Y).
+grandparent_of(Y, X) :- parent_of(Z1, X) , parent_of(Y, Z1).
+sibling_in_law_of(Y, X) :- sibling_of(Z1, X) , spouse_of(Y, Z1).
+belongs_to_group(X, female) :- mother_of(X,Y).
+belongs_to_group(X, female) :- grandmother_of(X,Y).
+belongs_to_group(X, female) :- sister_of(X,Y).
+belongs_to_group(X, female) :- aunt_of(X,Y).
+belongs_to_group(X, female) :- wife_of(X,Y).
+belongs_to_group(X, female) :- daughter_of(X,Y).
+belongs_to_group(X, female) :- granddaughter_of(X,Y).
+belongs_to_group(X, female) :- niece_of(X,Y).
+belongs_to_group(X, female) :- daughter_in_law_of(X,Y).
+belongs_to_group(X, female) :- sister_in_law_of(X,Y).
+belongs_to_group(X, female) :- mother_in_law_of(X,Y).
+belongs_to_group(X, male) :- father_of(X,Y).
+belongs_to_group(X, male) :- grandfather_of(X,Y).
+belongs_to_group(X, male) :- brother_of(X,Y).
+belongs_to_group(X, male) :- uncle_of(X,Y).
+belongs_to_group(X, male) :- husband_of(X,Y).
+belongs_to_group(X, male) :- son_of(X,Y).
+belongs_to_group(X, male) :- grandson_of(X,Y).
+belongs_to_group(X, male) :- nephew_of(X,Y).
+belongs_to_group(X, male) :- son_in_law_of(X,Y).
+belongs_to_group(X, male) :- brother_in_law_of(X,Y).
+belongs_to_group(X, male) :- father_in_law_of(X,Y).
+:- aunt_or_uncle_of(Y,X), child_in_law_of(Y,X).
+:- aunt_or_uncle_of(Y,X), child_of(Y,X).
+:- aunt_or_uncle_of(Y,X), grandchild_of(Y,X).
+:- aunt_or_uncle_of(Y,X), grandparent_of(Y,X).
+:- aunt_or_uncle_of(Y,X), nibling_of(Y,X).
+:- aunt_or_uncle_of(Y,X), parent_in_law_of(Y,X).
+:- aunt_or_uncle_of(Y,X), parent_of(Y,X).
+:- aunt_or_uncle_of(Y,X), sibling_in_law_of(Y,X).
+:- aunt_or_uncle_of(Y,X), sibling_of(Y,X).
+:- aunt_or_uncle_of(Y,X), spouse_of(Y,X).
+:- child_in_law_of(Y,X), child_of(Y,X).
+:- child_in_law_of(Y,X), grandchild_of(Y,X).
+:- child_in_law_of(Y,X), grandparent_of(Y,X).
+:- child_in_law_of(Y,X), nibling_of(Y,X).
+:- child_in_law_of(Y,X), parent_in_law_of(Y,X).
+:- child_in_law_of(Y,X), parent_of(Y,X).
+:- child_in_law_of(Y,X), sibling_in_law_of(Y,X).
+:- child_in_law_of(Y,X), sibling_of(Y,X).
+:- child_in_law_of(Y,X), spouse_of(Y,X).
+:- child_of(Y,X), grandchild_of(Y,X).
+:- child_of(Y,X), grandparent_of(Y,X).
+:- child_of(Y,X), nibling_of(Y,X).
+:- child_of(Y,X), parent_in_law_of(Y,X).
+:- child_of(Y,X), parent_of(Y,X).
+:- child_of(Y,X), sibling_in_law_of(Y,X).
+:- child_of(Y,X), sibling_of(Y,X).
+:- child_of(Y,X), spouse_of(Y,X).
+:- grandchild_of(Y,X), grandparent_of(Y,X).
+:- grandchild_of(Y,X), nibling_of(Y,X).
+:- grandchild_of(Y,X), parent_in_law_of(Y,X).
+:- grandchild_of(Y,X), parent_of(Y,X).
+:- grandchild_of(Y,X), sibling_in_law_of(Y,X).
+:- grandchild_of(Y,X), sibling_of(Y,X).
+:- grandchild_of(Y,X), spouse_of(Y,X).
+:- grandparent_of(Y,X), nibling_of(Y,X).
+:- grandparent_of(Y,X), parent_in_law_of(Y,X).
+:- grandparent_of(Y,X), parent_of(Y,X).
+:- grandparent_of(Y,X), sibling_in_law_of(Y,X).
+:- grandparent_of(Y,X), sibling_of(Y,X).
+:- grandparent_of(Y,X), spouse_of(Y,X).
+:- nibling_of(Y,X), parent_in_law_of(Y,X).
+:- nibling_of(Y,X), parent_of(Y,X).
+:- nibling_of(Y,X), sibling_in_law_of(Y,X).
+:- nibling_of(Y,X), sibling_of(Y,X).
+:- nibling_of(Y,X), spouse_of(Y,X).
+:- parent_in_law_of(Y,X), parent_of(Y,X).
+:- parent_in_law_of(Y,X), sibling_in_law_of(Y,X).
+:- parent_in_law_of(Y,X), sibling_of(Y,X).
+:- parent_in_law_of(Y,X), spouse_of(Y,X).
+:- parent_of(Y,X), sibling_in_law_of(Y,X).
+:- parent_of(Y,X), sibling_of(Y,X).
+:- parent_of(Y,X), spouse_of(Y,X).
+:- sibling_in_law_of(Y,X), sibling_of(Y,X).
+:- sibling_in_law_of(Y,X), spouse_of(Y,X).
+:- sibling_of(Y,X), spouse_of(Y,X).
+:- parent_of(U,X), parent_of(V,X), parent_of(W,X), U != V, W != V, U != W.
+:- parent_of(U,X), parent_of(V,X), belongs_to_group(U,male), belongs_to_group(V,male).
+:- parent_of(U,X), parent_of(V,X), belongs_to_group(U,female), belongs_to_group(V,female).
+:- grandparent_of(A,X), grandparent_of(B,X), grandparent_of(C,X), grandparent_of(D,X), grandparent_of(E,X),  A != B, A != C, A != D, A != E, B != C, B != D, B != E, C != D, C != E, D != E.
+:- spouse_of(X,U), spouse_of(X,V), U != V.
+paternal_aunt_or_uncle_of(Y, X) :- father_of(Z1, X) , sibling_of(Y, Z1).
+maternal_aunt_or_uncle_of(Y, X) :- mother_of(Z1, X) , sibling_of(Y, Z1).
+paternal_grandparent_of(Y, X) :- father_of(Z1, X) , parent_of(Y, Z1).
+maternal_grandparent_of(Y, X) :- mother_of(Z1, X) , parent_of(Y, Z1).
+paternal_aunt_or_uncle_of(X,Y) :- paternal_uncle_of(X,Y).
+paternal_aunt_or_uncle_of(X,Y) :- paternal_aunt_of(X,Y).
+aunt_or_uncle_of(X,Y) :- paternal_aunt_or_uncle_of(X,Y).
+maternal_aunt_or_uncle_of(X,Y) :- maternal_uncle_of(X,Y).
+maternal_aunt_or_uncle_of(X,Y) :- maternal_aunt_of(X,Y).
+aunt_or_uncle_of(X,Y) :- maternal_aunt_or_uncle_of(X,Y).
+paternal_grandparent_of(X,Y) :- paternal_grandmother_of(X,Y).
+maternal_grandparent_of(X,Y) :- maternal_grandmother_of(X,Y).
+maternal_grandparent_of(X,Y) :- maternal_grandfather_of(X,Y).
+paternal_grandparent_of(X,Y) :- paternal_grandfather_of(X,Y).
+grandparent_of(X,Y) :- maternal_grandparent_of(X,Y).
+grandparent_of(X,Y) :- paternal_grandparent_of(X,Y).
+paternal_grandfather_of(X,Y) :- paternal_grandparent_of(X,Y), belongs_to_group(X, male).
+paternal_grandmother_of(X,Y) :- paternal_grandparent_of(X,Y), belongs_to_group(X, female).
+maternal_grandfather_of(X,Y) :- maternal_grandparent_of(X,Y), belongs_to_group(X, male).
+maternal_grandmother_of(X,Y) :- maternal_grandparent_of(X,Y), belongs_to_group(X, female).
+maternal_aunt_of(X,Y) :- maternal_aunt_or_uncle_of(X,Y), belongs_to_group(X, female).
+maternal_uncle_of(X,Y) :- maternal_aunt_or_uncle_of(X,Y), belongs_to_group(X, male).
+paternal_aunt_of(X,Y) :- paternal_aunt_or_uncle_of(X,Y), belongs_to_group(X, female).
+paternal_uncle_of(X,Y) :- paternal_aunt_or_uncle_of(X,Y), belongs_to_group(X, male).
+parent_of(Y, X) :- mother_of(X,Z1) , maternal_grandparent_of(Y, Z1).
+parent_in_law_of(Y, X) :- mother_of(X,Z1) , paternal_grandparent_of(Y, Z1).
+parent_of(Y, X) :- father_of(X,Z1) , paternal_grandparent_of(Y, Z1).
+parent_in_law_of(Y, X) :- father_of(X,Z1) , maternal_grandparent_of(Y, Z1).
+sibling_of(X, Y) :- father_of(X,Z1) , paternal_aunt_or_uncle_of(Y, Z1).
+sibling_in_law_of(X, Y) :- mother_of(X,Z1) , paternal_aunt_or_uncle_of(Y, Z1).
+sibling_of(X, Y) :- mother_of(X,Z1) , maternal_aunt_or_uncle_of(Y, Z1).
+sibling_in_law_of(X, Y) :- father_of(X,Z1) , maternal_aunt_or_uncle_of(Y, Z1).
+belongs_to_group(X, female) :- paternal_grandmother_of(X,Y).
+belongs_to_group(X, female) :- maternal_grandmother_of(X,Y).
+belongs_to_group(X, male) :- maternal_grandfather_of(X,Y).
+belongs_to_group(X, male) :- paternal_grandfather_of(X,Y).
+belongs_to_group(X, female) :- maternal_aunt_of(X,Y).
+belongs_to_group(X, female) :- paternal_aunt_of(X,Y).
+belongs_to_group(X, male) :- maternal_uncle_of(X,Y).
+belongs_to_group(X, male) :- paternal_uncle_of(X,Y).
+:- maternal_grandparent_of(X,Y) , paternal_grandparent_of(X,Y).
+:- maternal_aunt_or_uncle_of(X,Y), paternal_aunt_or_uncle_of(X,Y).
+living_in_same_place(Y,X) :- belongs_to(X, underage), parent_of(Y,X).
+living_in(Y,Z) :- living_in_same_place(X,Y), living_in(X,Z).
+living_in_same_place(X,Y) :- living_in_same_place(Y,X).
+living_in_same_place(Y,X) :- school_mates_with(Y,X).
+living_in_same_place(Y,X) :- colleague_of(Y,X).
+colleague_of(X,Y) :- colleague_of(Y,X).
+colleague_of(X,Y) :- colleague_of(X,Z), colleague_of(Z,Y).
+school_mates_with(X,Y) :- school_mates_with(Y,X), Y != X.
+school_mates_with(X,Y) :- school_mates_with(X,Z), school_mates_with(Z,Y), Y != X.
+:- belongs_to(X, underage), spouse_of(X,Y).
+:- belongs_to(X, underage), parent_of(X,Y).
+:- belongs_to(X, underage), grandparent_of(X,Y).
+:- colleague_of(X,Y), belongs_to(X, underage).
+:- is_person(X), is_place(X).
+:- is_person(X), is_gender(X).
+:- is_person(X), is_agegroup(X).
+:- is_person(X), is_property(X).
+:- is_place(X), is_gender(X).
+:- is_place(X), is_agegroup(X).
+:- is_place(X), is_property(X).
+:- is_gender(X), is_agegroup(X).
+:- is_gender(X), is_property(X).
+:- is_agegroup(X), is_property(X).
+is_agegroup(Y):- belongs_to(X,Y).
+is_person(X) :- belongs_to(X, underage).
+is_person(X) :- living_in_same_place(X,Y).
+is_person(Y) :- living_in_same_place(X,Y).
+is_person(X) :- school_mates_with(X,Y).
+is_person(Y) :- school_mates_with(X,Y).
+is_person(X) :- colleague_of(X,Y).
+is_person(Y) :- colleague_of(X,Y).
+is_gender(X) :- belongs_to_group(Y,X).
+is_person(Y) :- belongs_to_group(Y,X).
+:- belongs_to_group(X,female), belongs_to_group(X,male).
+is_place(Z) :- living_in(X,Z).
+is_person(X) :- living_in(X,Z).
+:- living_in(X, V), living_in(X, U), U != V.
+:- is_person(X), is_place(X).
+:- is_person(X), is_gender(X).
+:- is_place(X), is_gender(X).
+is_person(X) :- aunt_or_uncle_of(X,Y).
+is_person(Y) :- aunt_or_uncle_of(X,Y).
+is_person(X) :- parent_of(X,Y).
+is_person(Y) :- parent_of(X,Y).
+is_person(X) :- grandparent_of(X,Y).
+is_person(Y) :- grandparent_of(X,Y).
+is_person(X) :- parent_in_law_of(X,Y).
+is_person(Y) :- parent_in_law_of(X,Y).
+is_person(X) :- sibling_of(X,Y).
+is_person(Y) :- sibling_of(X,Y).
+is_person(X) :- spouse_of(X,Y).
+is_person(Y) :- spouse_of(X,Y).
+is_person(X) :- sibling_in_law_of(X,Y).
+is_person(Y) :- sibling_in_law_of(X,Y).
+is_person(X) :- nibling_of(X,Y).
+is_person(Y) :- nibling_of(X,Y).
+is_person(X) :- child_of(X,Y).
+is_person(Y) :- child_of(X,Y).
+is_person(X) :- grandchild_of(X,Y).
+is_person(Y) :- grandchild_of(X,Y).
+is_person(X) :- child_in_law_of(X,Y).
+is_person(Y) :- child_in_law_of(X,Y).
+belongs_to(X, underage) :- school_mates_with(X,U).
+Not_living_in(X,V) :- living_in(X,U), U != V.
