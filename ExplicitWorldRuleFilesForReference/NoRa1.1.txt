@@ -286,3 +286,4 @@ is_person(X) :- sibling_in_law_of(X,Y).
 is_person(X) :- nibling_of(X,Y).
 is_person(Y) :- nibling_of(X,Y).
 is_underage(X,X) :- school_mates_with(X,U).
+Not_living_in(X,V) :- living_in(X,U), U != V.
