@@ -282,3 +282,4 @@ is_person(Y) :- grandchild_of(X,Y).
 is_person(X) :- child_in_law_of(X,Y).
 is_person(Y) :- child_in_law_of(X,Y).
 belongs_to(X, underage) :- school_mates_with(X,U).
+Not_living_in(X,V) :- living_in(X,U), U != V.
