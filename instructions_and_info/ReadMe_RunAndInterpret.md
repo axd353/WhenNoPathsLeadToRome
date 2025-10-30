@@ -134,6 +134,13 @@ For each generated problem instance with ambiguity, the following columns are re
 
 ---
 
+
+---
+## Video Links
+
+- Walkthrough on YouTube: https://www.youtube.com/watch?v=Aj_3kiWTrbs
+---
+---
 ## Credits
 
 This code uses the **ASP compiler** developed by  
