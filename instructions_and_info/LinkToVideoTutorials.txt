@@ -1,0 +1,4 @@
+We have put together a video series to help anyone who wants to download our hashtag#NeurIPS2025 paper dataset <https://lnkd.in/gsvHdMkY>, understand what it looks like, and start training reasoning models with it. The series also includes a few short lectures that walk through the paper we’re presenting at the conference and give a gentle introduction to how reasoning tasks are framed and what modern reasoning models are expected to do.
+No prior knowledge is needed—jump right in if you’ve ever wanted to understand what “reasoning” means in the context of AI.
+🎥 Playlist:
+ https://lnkd.in/gyKutjFR
